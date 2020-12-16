@@ -18,7 +18,8 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
         x11-xkb-utils \
         xauth \
         xfonts-base \
-        xkb-data && \
+        xkb-data \
+        supervisor && \
     rm -rf /var/lib/apt/lists/*
 
 RUN cd /tmp && \
@@ -40,4 +41,9 @@ RUN cd /tmp && \
 RUN mkdir -p /root/.vnc
 RUN echo testpass | /opt/TurboVNC/bin/vncpasswd -f > /root/.vnc/passwd && chmod 600 /root/.vnc/passwd
 
-EXPOSE 6080
+RUN mkdir -p /root/.supervisor/conf.d
+
+COPY supervisor.conf /root/.supervisor
+COPY turbovnc.conf /root/.supervisor/conf.d
+
+CMD /usr/bin/supervisord -c /root/.supervisor/supervisor.conf

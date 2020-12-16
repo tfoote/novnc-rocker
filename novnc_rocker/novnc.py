@@ -22,6 +22,15 @@ class NoVNC(RockerExtension):
     def get_preamble(self, cli_args):
         return ''
 
+    def get_files(self, cli_args):
+        file_list = ['supervisor.conf', 'novnc.conf']
+        files = {}
+        for f in file_list:
+            files['%s' % f] = pkgutil.get_data(
+                'novnc_rocker',
+                'templates/%s' % f).decode('utf-8')
+        return files
+
     def get_snippet(self, cli_args):
         snippet = pkgutil.get_data(
             'novnc_rocker',
