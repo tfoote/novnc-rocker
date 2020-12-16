@@ -29,7 +29,7 @@ class NoVNC(RockerExtension):
         return em.expand(snippet, self._env_subs)
 
     def get_docker_args(self, cli_args):
-        return ''
+        return '-p 6080:6080'
 
     @staticmethod
     def register_arguments(parser, defaults={}):

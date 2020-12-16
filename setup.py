@@ -21,6 +21,7 @@ setuptools.setup(
     entry_points={
         'rocker.extensions': [
             'novnc = novnc_rocker.novnc:NoVNC',
+            'turbovnc = novnc_rocker.turbovnc:TurboVNC',
         ]
     }
 )
