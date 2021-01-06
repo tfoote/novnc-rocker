@@ -1,18 +1,13 @@
-RUN \
-	apt-get update \
-	&& \
-	apt-get install --yes \
+RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -qy --no-install-recommends \
 		net-tools \
         python3-pip \
         git\
-        supervisor 
+        supervisor \
+	&& rm -rf /var/lib/apt/lists/*
 RUN mkdir -p /opt
 WORKDIR /opt
 
 RUN \
-	pip3 install --no-cache-dir \
-		numpy \
-	&& \
 	git clone https://github.com/novnc/noVNC.git /opt/noVNC \
 	&& \
 	git clone https://github.com/kanaka/websockify /opt/noVNC/utils/websockify \
