@@ -8,6 +8,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -qy --no-in
     	lubuntu-desktop \
         mesa-utils \
         supervisor \
+        xauth \
     && rm -rf /var/lib/apt/lists/*
 
 RUN cd /tmp && \
