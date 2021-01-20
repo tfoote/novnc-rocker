@@ -2,6 +2,7 @@ import em
 import pkgutil
 import sys
 from rocker.extensions import RockerExtension, name_to_argument
+from rocker.os_detector import detect_os
 
 
 class TurboVNC(RockerExtension):
@@ -12,9 +13,17 @@ class TurboVNC(RockerExtension):
     def __init__(self):
         self._env_subs = {}
         self.name = TurboVNC.get_name()
+        self.SUPPORTED_CODENAMES = ['focal']
 
     def precondition_environment(self, cli_args):
-        pass
+        detected_os = detect_os(cli_args['base_image'], print, nocache=cli_args.get('nocache', False))
+        if detected_os is None:
+            print("WARNING unable to detect os for base image '%s', maybe the base image does not exist" % cliargs['base_image'])
+            sys.exit(1)
+        dist, ver, codename = detected_os
+        if codename not in self.SUPPORTED_CODENAMES:
+            print("ERROR: Unsupported codename for base image: %s not in %s" % (codename, self.SUPPORTED_CODENAMES))
+            sys.exit(1)
 
     def validate_environment(self, cli_args):
         pass
