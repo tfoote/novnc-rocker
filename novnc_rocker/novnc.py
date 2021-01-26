@@ -23,13 +23,13 @@ class NoVNC(RockerExtension):
         return ''
 
     def get_files(self, cli_args):
-        file_list = ['supervisor.conf']
+        file_list = ['supervisor.conf', 'self.pem', '.htpasswd', 'nginx.conf']
         files = {}
         for f in file_list:
             files['%s' % f] = pkgutil.get_data(
                 'novnc_rocker',
                 'templates/%s' % f).decode('utf-8')
-        template_list = ['novnc.conf']
+        template_list = ['novnc.conf',  'rproxy-nginx-site']
         for f in template_list:
             files['%s' % f] = em.expand(
                 pkgutil.get_data(
@@ -56,5 +56,5 @@ class NoVNC(RockerExtension):
         parser.add_argument('--novnc-port',
             action='store',
             type=int,
-            default=defaults.get('novnc-port', 6080),
+            default=defaults.get('novnc-port', 8080),
             help="what port to use for novnc")
