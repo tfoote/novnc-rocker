@@ -1,5 +1,6 @@
 # NoVNC Rocker Extension
 
+This is an extension for [rocker](https://github.com/osrf/rocker).
 
 ## First pass demo 
 
