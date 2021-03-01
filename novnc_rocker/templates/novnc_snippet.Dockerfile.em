@@ -1,4 +1,5 @@
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -qy --no-install-recommends \
+		apache2-utils \
 		net-tools \
 		nginx-full \
         python3-pip \
@@ -22,6 +23,6 @@ COPY novnc.conf /root/.supervisor/conf.d
 COPY nginx.conf /root/.supervisor/conf.d
 
 COPY self.pem /root/self.pem
-COPY .htpasswd /opt/noVNC
+RUN htpasswd -cb /opt/noVNC/.htpasswd @(novnc_user) @(novnc_password)
 COPY rproxy-nginx-site /etc/nginx/sites-available
 RUN ln -s /etc/nginx/sites-available/rproxy-nginx-site /etc/nginx/sites-enabled/rproxy-nginx-site

@@ -23,7 +23,7 @@ class NoVNC(RockerExtension):
         return ''
 
     def get_files(self, cli_args):
-        file_list = ['supervisor.conf', 'self.pem', '.htpasswd', 'nginx.conf']
+        file_list = ['supervisor.conf', 'self.pem', 'nginx.conf']
         files = {}
         for f in file_list:
             files['%s' % f] = pkgutil.get_data(
@@ -39,10 +39,15 @@ class NoVNC(RockerExtension):
         return files
 
     def get_snippet(self, cli_args):
+        snippet_args = {}
+        # TODO(tfoote) validate these earlier and give a good error
+        # TODO(tfoote) find a mechanism not to bake the access control into the images
+        snippet_args['novnc_user'] = cli_args['novnc_user']
+        snippet_args['novnc_password'] = cli_args['novnc_password']
         snippet = pkgutil.get_data(
             'novnc_rocker',
             'templates/%s_snippet.Dockerfile.em' % self.name).decode('utf-8')
-        return em.expand(snippet, self._env_subs)
+        return em.expand(snippet, snippet_args)
 
     def get_docker_args(self, cli_args):
         return '-p %s:%s' % (cli_args['novnc_port'], cli_args['novnc_port'])
@@ -58,3 +63,11 @@ class NoVNC(RockerExtension):
             type=int,
             default=defaults.get('novnc-port', 8080),
             help="what port to use for novnc")
+        parser.add_argument('--novnc-user',
+            action='store',
+            default=None,
+            help="username for novnc")
+        parser.add_argument('--novnc-password',
+            action='store',
+            default=None,
+            help="password for novnc")
