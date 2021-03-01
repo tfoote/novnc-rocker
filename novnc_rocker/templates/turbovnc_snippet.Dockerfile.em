@@ -15,8 +15,7 @@ RUN cd /tmp && \
     curl -fsSL -O ${SOURCEFORGE}/turbovnc/files/${TURBOVNC_VERSION}/turbovnc_${TURBOVNC_VERSION}_amd64.deb \
         -O ${SOURCEFORGE}/virtualgl/files/${VIRTUALGL_VERSION}/virtualgl_${VIRTUALGL_VERSION}_amd64.deb \
     && dpkg -i *.deb \
-    && rm -f /tmp/*.deb \
-    && sed -i 's/$host:/unix:/g' /opt/TurboVNC/bin/vncserver
+    && rm -f /tmp/*.deb
 
 RUN mkdir -p /root/.vnc
 RUN echo testpass | /opt/TurboVNC/bin/vncpasswd -f > /root/.vnc/passwd && chmod 600 /root/.vnc/passwd
