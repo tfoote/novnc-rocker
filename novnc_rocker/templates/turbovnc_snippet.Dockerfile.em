@@ -17,9 +17,10 @@ RUN cd /tmp && \
     && dpkg -i *.deb \
     && rm -f /tmp/*.deb
 
-RUN echo '$vncUserDir = "@(vnc_user_home)";' >> /etc/turbovncserver.conf
+# Keep vnc content out of
+RUN echo '$vncUserDir = "/tmp/@(vnc_user)-vnc";' >> /etc/turbovncserver.conf
+
 # TODO(tfoote) authentication
-# RUN mkdir -p ~/@(vnc_user)-vnc
 # RUN echo testpass | /opt/TurboVNC/bin/vncpasswd -f > ~/@(vnc_user)-vnc/passwd && chmod -R 600 ~/@(vnc_user)-vnc/passwd
 # TODO(tfoote) needed maybe too? && chown -R @(vnc_user) /tmp/@(vnc_user)-vnc/passwd
 
