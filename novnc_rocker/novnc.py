@@ -45,7 +45,7 @@ class NoVNC(RockerExtension):
         return em.expand(snippet, self._env_subs)
 
     def get_docker_args(self, cli_args):
-        return '-p %s:%s' % (cli_args['novnc_port'], cli_args['novnc_port'])
+        return ' -p %s:%s' % (cli_args['novnc_port'], cli_args['novnc_port'])
 
     @staticmethod
     def register_arguments(parser, defaults={}):
