@@ -26,8 +26,8 @@ class TurboVNC(RockerExtension):
             self._env_subs['vnc_user_home'] = '/root'
             if 'user' in cli_args:
                 if cli_args['user']:
-                    self._env_subs['vnc_user'] = getpass.getuser()
-                    self._env_subs['vnc_user_home'] = os.path.expanduser('~')
+                    self._env_subs['vnc_user'] = cli_args['user_override_name'] if cli_args['user_override_name'] else getpass.getuser()
+                    self._env_subs['vnc_user_home'] = os.path.join('/home/', cli_args['user_override_name']) if cli_args['user_override_name'] else os.path.expanduser('~')
         return self._env_subs
 
     def precondition_environment(self, cli_args):
