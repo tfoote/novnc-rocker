@@ -1,4 +1,6 @@
 import em
+import getpass
+import os
 import pkgutil
 import sys
 from rocker.extensions import RockerExtension, name_to_argument
@@ -14,6 +16,19 @@ class TurboVNC(RockerExtension):
         self._env_subs = {}
         self.name = TurboVNC.get_name()
         self.SUPPORTED_CODENAMES = ['focal']
+
+    def compute_env_subs(self, cli_args):
+        # TODO(tfoote) this caches cli_args implicitly
+        if not self._env_subs:
+            # default case
+            # Todo evaluate elsewhere?
+            self._env_subs['vnc_user'] = 'root'
+            self._env_subs['vnc_user_home'] = '/root'
+            if 'user' in cli_args:
+                if cli_args['user']:
+                    self._env_subs['vnc_user'] = cli_args['user_override_name'] if cli_args['user_override_name'] else getpass.getuser()
+                    self._env_subs['vnc_user_home'] = os.path.join('/home/', cli_args['user_override_name']) if cli_args['user_override_name'] else os.path.expanduser('~')
+        return self._env_subs
 
     def precondition_environment(self, cli_args):
         detected_os = detect_os(cli_args['base_image'], print, nocache=cli_args.get('nocache', False))
@@ -32,19 +47,35 @@ class TurboVNC(RockerExtension):
         return ''
 
     def get_files(self, cli_args):
-        file_list = ['supervisor.conf', 'turbovnc.conf']
+        file_list = ['supervisor.conf']
         files = {}
         for f in file_list:
             files['%s' % f] = pkgutil.get_data(
                 'novnc_rocker',
                 'templates/%s' % f).decode('utf-8')
+        template_list = ['turbovnc.conf']
+        self.compute_env_subs(cli_args)
+        for f in template_list:
+            try:
+                files['%s' % f] = em.expand(
+                    pkgutil.get_data(
+                    'novnc_rocker',
+                    'templates/%s.em' % f).decode('utf-8'),
+                    self._env_subs)
+            except (NameError, TypeError) as ex:
+                raise NameError("Failed to evaluate template %s: %s \args are: %s" % (f, ex, self._env_subs))
         return files
 
     def get_snippet(self, cli_args):
+        self.compute_env_subs(cli_args)
         snippet = pkgutil.get_data(
             'novnc_rocker',
             'templates/%s_snippet.Dockerfile.em' % self.name).decode('utf-8')
-        return em.expand(snippet, self._env_subs)
+        try:
+            result = em.expand(snippet, self._env_subs)
+        except (NameError, TypeError) as ex:
+            raise NameError("Failed to evaluate snippet for %s: %s. \nargs are: %s" % (self.name, ex, self._env_subs))
+        return result
 
     def get_docker_args(self, cli_args):
         return ''
