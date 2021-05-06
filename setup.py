@@ -25,6 +25,7 @@ setuptools.setup(
     ],
     entry_points={
         'rocker.extensions': [
+            'fuse = novnc_rocker.fuse:Fuse',
             'novnc = novnc_rocker.novnc:NoVNC',
             'turbovnc = novnc_rocker.turbovnc:TurboVNC',
         ]
