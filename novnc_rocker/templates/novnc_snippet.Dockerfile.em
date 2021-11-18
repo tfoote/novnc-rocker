@@ -21,7 +21,12 @@ COPY supervisor.conf /root/.supervisor
 COPY novnc.conf /root/.supervisor/conf.d
 COPY nginx.conf /root/.supervisor/conf.d
 
+
 COPY self.pem /root/self.pem
 COPY .htpasswd /opt/noVNC
+
+# Remove default nginx site
+RUN unlink /etc/nginx/sites-enabled/default
+# Setup our nginx site
 COPY rproxy-nginx-site /etc/nginx/sites-available
 RUN ln -s /etc/nginx/sites-available/rproxy-nginx-site /etc/nginx/sites-enabled/rproxy-nginx-site
