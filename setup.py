@@ -8,6 +8,7 @@ setuptools.setup(
     version="0.0.1",
     packages=setuptools.find_packages(),
     package_data={'novnc_rocker': ['templates/*.em',
+        'templates/.htpasswd.em',
         'templates/self.pem',
         'templates/nginx.conf',
         'templates/supervisor.conf',
