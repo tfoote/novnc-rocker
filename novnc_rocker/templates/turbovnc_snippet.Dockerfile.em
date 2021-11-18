@@ -1,5 +1,5 @@
 ARG SOURCEFORGE=https://sourceforge.net/projects
-ARG TURBOVNC_VERSION=2.2.5
+ARG TURBOVNC_VERSION=2.2.6
 ARG VIRTUALGL_VERSION=2.6.5
 
 RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -qy --no-install-recommends \
