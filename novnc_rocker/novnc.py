@@ -23,13 +23,13 @@ class NoVNC(RockerExtension):
         return ''
 
     def get_files(self, cli_args):
-        file_list = ['supervisor.conf', 'self.pem', '.htpasswd', 'nginx.conf']
+        file_list = ['supervisor.conf', 'self.pem', 'nginx.conf']
         files = {}
         for f in file_list:
             files['%s' % f] = pkgutil.get_data(
                 'novnc_rocker',
                 'templates/%s' % f).decode('utf-8')
-        template_list = ['novnc.conf',  'rproxy-nginx-site']
+        template_list = ['novnc.conf',  'rproxy-nginx-site', '.htpasswd']
         for f in template_list:
             files['%s' % f] = em.expand(
                 pkgutil.get_data(
@@ -58,3 +58,13 @@ class NoVNC(RockerExtension):
             type=int,
             default=defaults.get('novnc-port', 8080),
             help="what port to use for novnc")
+        parser.add_argument('--novnc-user',
+            action='store',
+            type=str,
+            default=defaults.get('novnc-user', 'novnc_example_user'),
+            help="what username to use for novnc")
+        parser.add_argument('--novnc-password',
+            action='store',
+            type=str,
+            default=defaults.get('novnc-user', 'novnc_example_password_$Insecure_$Changeme!!'),
+            help="what password to use for novnc")

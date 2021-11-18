@@ -21,6 +21,7 @@ setuptools.setup(
     url="https://github.com/tfoote/novnc-rocker",
     license='Apache 2.0',
     install_requires=[
+        'bcrypt',
         'rocker',
     ],
     entry_points={
