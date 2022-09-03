@@ -15,7 +15,7 @@ class TurboVNC(RockerExtension):
     def __init__(self):
         self._env_subs = {}
         self.name = TurboVNC.get_name()
-        self.SUPPORTED_CODENAMES = ['focal']
+        self.SUPPORTED_CODENAMES = ['focal', 'jammy']
 
     def compute_env_subs(self, cli_args):
         # TODO(tfoote) this caches cli_args implicitly
